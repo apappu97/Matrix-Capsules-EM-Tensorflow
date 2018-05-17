@@ -140,12 +140,13 @@ def main(args):
                     summary_writer.add_summary(summary_str, step)
 
                 """Epoch wise linear annealling."""
+                if step % 50 == 0: print('step size and num batches per epoch', step, num_batches_per_epoch)
                 if (step % num_batches_per_epoch) == 0:
                     if step > 0:
                         m += (m_max - m_min) / (cfg.epoch * cfg.m_schedule)
                         if m > m_max:
                             m = m_max
-
+                    print("SAVING!")
                     """Save model periodically"""
                     ckpt_path = os.path.join(
                         cfg.logdir + '/caps/{}/'.format(dataset_name), 'model-{:.4f}.ckpt'.format(loss_value))

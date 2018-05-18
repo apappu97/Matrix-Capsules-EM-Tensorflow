@@ -43,8 +43,11 @@ def main(args):
         num_batches_per_epoch = int(dataset_size / cfg.batch_size)
 
         """Use exponential decay leanring rate?"""
+        # lrn_rate = tf.maximum(tf.train.exponential_decay(
+        #     1e-3, global_step, num_batches_per_epoch, 0.8), 1e-5)
+        
         lrn_rate = tf.maximum(tf.train.exponential_decay(
-            1e-3, global_step, num_batches_per_epoch, 0.8), 1e-5)
+            1e-4, global_step, num_batches_per_epoch, 0.8), 1e-5)
         tf.summary.scalar('learning_rate', lrn_rate)
         opt = tf.train.AdamOptimizer()  # lrn_rate
 
@@ -88,6 +91,8 @@ def main(args):
         sess.run(tf.local_variables_initializer())
         sess.run(tf.global_variables_initializer())
 
+        # print('going to try to print learning rate')
+        # print(sess.run(lrn_rate))
         """Set Saver."""
         var_to_save = [v for v in tf.global_variables(
         ) if 'Adam' not in v.name]  # Don't save redundant Adam beta/gamma
